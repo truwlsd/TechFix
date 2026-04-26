@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum BonusLevel {
+  silver
+  gold
+  platinum
+}
+
+enum OrderStatus {
+  pending
+  diagnostics
+  in_progress
+  ready
+  completed
+  cancelled
+}
+
+enum BonusTransactionType {
+  welcome
+  earn
+  spend
+  adjust
+}
+
+model User {
+  id            String             @id @default(cuid())
+  name          String
+  email         String             @unique
+  phone         String
+  passwordHash  String
+  bonusBalance  Int                @default(0)
+  bonusLevel    BonusLevel         @default(silver)
+  totalSpent    Int                @default(0)
+  isAdmin       Boolean            @default(false)
+  registeredAt  DateTime           @default(now())
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  orders        Order[]
+  bonusLedger   BonusTransaction[]
+}
+
+model Service {
+  id          String   @id
+  name        String
+  price       Int
+  description String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Order {
+  id                String              @id @default(cuid())
+  userId            String
+  serviceId         String
+  serviceName       String
+  serviceBasePrice  Int
+  finalPrice        Int
+  status            OrderStatus         @default(pending)
+  deviceDescription String
+  bonusUsed         Int                 @default(0)
+  bonusEarned       Int                 @default(0)
+  masterComment     String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  user              User                @relation(fields: [userId], references: [id])
+  service           Service             @relation(fields: [serviceId], references: [id])
+  statusHistory     OrderStatusHistory[]
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  comment   String?
+  createdAt DateTime    @default(now())
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model BonusTransaction {
+  id          String               @id @default(cuid())
+  userId      String
+  orderId     String?
+  amount      Int
+  type        BonusTransactionType
+  description String
+  createdAt   DateTime             @default(now())
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

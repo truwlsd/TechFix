@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { X, Wrench, Gift, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
-import { useStore } from "../store/useStore";
+import { useStore } from "../../store/useStore";
+import styles from "./OrderModal.module.css";
 
 interface Service {
   id: string;
@@ -30,6 +32,7 @@ export default function OrderModal({ service, onClose }: Props) {
   );
   const finalPrice = service.price - bonusUsed;
   const bonusEarned = Math.floor(finalPrice * 0.05);
+  const pct = maxBonus > 0 ? (bonusUsed / maxBonus) * 100 : 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,9 +68,14 @@ export default function OrderModal({ service, onClose }: Props) {
     setSubmitted(true);
   };
 
+  const bonusStyle =
+    ({
+      "--bonus-pct": `${pct}%`,
+    }) as CSSProperties;
+
   return (
     <div
-      className="modal-overlay"
+      className={styles.overlay}
       onMouseDown={(e) => {
         shouldCloseOnClick.current = e.target === e.currentTarget;
       }}
@@ -78,21 +86,20 @@ export default function OrderModal({ service, onClose }: Props) {
       }}
     >
       <div
-        className="modal-content w-full max-w-lg"
+        className={styles.panel}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close */}
         <button
+          type="button"
+          className={styles.closeBtn}
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white/50 hover:text-white transition-all z-10"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* ── Success State ── */}
         {submitted ? (
-          <div className="p-10 text-center">
-            <div className="w-20 h-20 rounded-full bg-white/[0.06] border border-white/[0.1] flex items-center justify-center mx-auto mb-6">
+          <div className={styles.successWrap}>
+            <div className={styles.successIconCircle}>
               <CheckCircle className="w-10 h-10 text-white/70" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">
@@ -102,7 +109,7 @@ export default function OrderModal({ service, onClose }: Props) {
               Мы свяжемся с вами в течение 30 минут для уточнения деталей.
             </p>
 
-            <div className="glass rounded-2xl px-5 py-4 mb-8 flex items-center gap-3">
+            <div className={`glass ${styles.bonusHint} mb-8`}>
               <Gift className="w-5 h-5 text-white/40 flex-shrink-0" />
               <p className="text-sm text-white/50">
                 <span className="text-white font-semibold">
@@ -112,17 +119,16 @@ export default function OrderModal({ service, onClose }: Props) {
               </p>
             </div>
 
-            <button onClick={onClose} className="btn-primary w-full justify-center py-3.5">
+            <button type="button" onClick={onClose} className="btn-primary w-full justify-center py-3.5">
               Отлично!
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         ) : (
           <>
-            {/* ── Header ── */}
-            <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-white/[0.08] flex items-center justify-center">
+            <div className={styles.header}>
+              <div className={styles.headerRow}>
+                <div className={styles.headerIconWrap}>
                   <Wrench className="w-3.5 h-3.5 text-white/60" />
                 </div>
                 <span className="text-xs text-white/30 uppercase tracking-wider font-medium">
@@ -133,11 +139,9 @@ export default function OrderModal({ service, onClose }: Props) {
               <p className="text-sm text-white/30 mt-1">от {service.priceLabel}</p>
             </div>
 
-            {/* ── Form ── */}
-            <form onSubmit={handleSubmit} className="px-8 py-6 space-y-5">
-              {/* Device description */}
+            <form onSubmit={handleSubmit} className={styles.form}>
               <div>
-                <label className="block text-xs font-medium text-white/40 mb-2 uppercase tracking-wider">
+                <label className={styles.label}>
                   Описание проблемы / устройство *
                 </label>
                 <textarea
@@ -154,10 +158,9 @@ export default function OrderModal({ service, onClose }: Props) {
                 />
               </div>
 
-              {/* Bonus slider */}
               {currentUser && currentUser.bonusBalance > 0 && (
-                <div className="glass rounded-2xl p-4">
-                  <div className="flex items-center justify-between mb-3">
+                <div className={`glass ${styles.bonusBlock}`}>
+                  <div className={styles.bonusMeta}>
                     <div className="flex items-center gap-2">
                       <Gift className="w-4 h-4 text-white/40" />
                       <span className="text-sm text-white/60 font-medium">
@@ -174,16 +177,10 @@ export default function OrderModal({ service, onClose }: Props) {
                     max={maxBonus}
                     value={bonusUsed}
                     onChange={(e) => setBonusUsed(Number(e.target.value))}
-                    className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-                    style={{
-                      background: `linear-gradient(to right, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.6) ${
-                        maxBonus > 0 ? (bonusUsed / maxBonus) * 100 : 0
-                      }%, rgba(255,255,255,0.08) ${
-                        maxBonus > 0 ? (bonusUsed / maxBonus) * 100 : 0
-                      }%, rgba(255,255,255,0.08) 100%)`,
-                    }}
+                    className={styles.range}
+                    style={bonusStyle}
                   />
-                  <div className="flex justify-between text-xs mt-2">
+                  <div className={styles.rangeMeta}>
                     <span className="text-white/25">0</span>
                     {bonusUsed > 0 && (
                       <span className="text-white/60 font-medium">
@@ -197,34 +194,32 @@ export default function OrderModal({ service, onClose }: Props) {
                 </div>
               )}
 
-              {/* Price summary */}
-              <div className="glass rounded-2xl p-4 space-y-2.5">
-                <div className="flex justify-between text-sm">
+              <div className={`glass ${styles.summary}`}>
+                <div className={styles.rowBetween}>
                   <span className="text-white/40">Стоимость услуги</span>
                   <span className="text-white/60">от {service.priceLabel}</span>
                 </div>
                 {bonusUsed > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className={styles.rowBetween}>
                     <span className="text-white/40">Скидка бонусами</span>
                     <span className="text-white/60">−{bonusUsed} ₽</span>
                   </div>
                 )}
-                <div className="h-px bg-white/[0.06]" />
-                <div className="flex justify-between">
-                  <span className="font-semibold text-white">Итого от</span>
+                <div className={styles.rule} />
+                <div className={`${styles.rowBetween} font-semibold`}>
+                  <span className="text-white">Итого от</span>
                   <span className="font-bold text-white">
                     {finalPrice.toLocaleString()} ₽
                   </span>
                 </div>
-                <div className="flex justify-between text-xs">
+                <div className={`${styles.rowBetween} text-xs`}>
                   <span className="text-white/30">Начислим бонусов</span>
                   <span className="text-green-400/70">+{bonusEarned} баллов</span>
                 </div>
               </div>
 
-              {/* Auth hint */}
               {!currentUser && (
-                <div className="flex items-start gap-3 glass rounded-xl p-3.5">
+                <div className={`flex items-start gap-3 glass ${styles.authHint}`}>
                   <AlertCircle className="w-4 h-4 text-white/30 mt-0.5 flex-shrink-0" />
                   <p className="text-sm text-white/40">
                     Войдите в аккаунт чтобы копить бонусы и отслеживать заказ
@@ -232,15 +227,13 @@ export default function OrderModal({ service, onClose }: Props) {
                 </div>
               )}
 
-              {/* Error */}
               {error && (
-                <div className="flex items-center gap-2 bg-red-500/[0.08] border border-red-500/20 rounded-xl px-4 py-3">
+                <div className={styles.errBox}>
                   <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                   <span className="text-sm text-red-400">{error}</span>
                 </div>
               )}
 
-              {/* Submit */}
               <button
                 type="submit"
                 className="btn-primary w-full justify-center py-3.5"

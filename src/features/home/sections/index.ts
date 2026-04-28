@@ -1,0 +1,12 @@
+export { BonusSection } from "./BonusSection";
+export { ContactsSection } from "./ContactsSection";
+export { FaqSection } from "./FaqSection";
+export { FeaturesSection } from "./FeaturesSection";
+export { FooterSection } from "./FooterSection";
+export { HeroSection } from "./HeroSection";
+export { HowItWorksSection } from "./HowItWorksSection";
+export { MarqueeSection } from "./MarqueeSection";
+export { PopularServicesSection } from "./PopularServicesSection";
+export { ReviewsSection } from "./ReviewsSection";
+export { StatsSection } from "./StatsSection";
+export type { HomeSectionsUserProp } from "./types";

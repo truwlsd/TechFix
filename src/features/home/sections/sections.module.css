@@ -1,0 +1,489 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0f;
+}
+
+.scrollChevronWrap {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.marqueeSection {
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: #080810;
+  overflow: hidden;
+}
+
+.marqueeDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.marqueeItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 0 24px;
+}
+
+.marqueeText {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+}
+
+.statsSection {
+  padding: 80px 0;
+  background: #0a0a0f;
+}
+
+.howSection {
+  padding: 100px 0;
+  background: #080810;
+}
+
+.howHeader {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.howSubtitle {
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 16px;
+  max-width: 500px;
+  margin: 16px auto 0;
+}
+
+.howStepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .howStepsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.howCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
+  padding: 32px;
+  position: relative;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.howCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.howCardIconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.howArrowHint {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.stepNum {
+  font-size: 48px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.05);
+  line-height: 1;
+  margin-bottom: 20px;
+  font-family: ui-monospace, monospace;
+}
+
+.popularSection {
+  padding: 100px 0;
+  background: #0a0a0f;
+}
+
+.popularHeadingRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.allServicesLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.allServicesLink:hover {
+  color: #fff;
+}
+
+.featuresSection {
+  padding: 100px 0;
+  background: #080810;
+}
+
+.featuresHeader {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.howIcon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.howTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.howDesc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.7;
+}
+
+.featureCardInner {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.featureCardInner:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+}
+
+.featureIcon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.featureTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.featureDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.6;
+}
+
+.serviceBody {
+  padding: 20px;
+}
+
+.serviceIconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.serviceTitle {
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.serviceDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.6;
+}
+
+.servicePriceLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-bottom: 2px;
+}
+
+.featureIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.serviceCardFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewsSection {
+  padding: 100px 0;
+  background: #080810;
+  overflow: hidden;
+}
+
+.reviewCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 24px;
+  margin: 0 10px;
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.faqSection {
+  padding: 100px 0;
+  background: #0a0a0f;
+}
+
+.faqHeader {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.faqSubtitle {
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 16px;
+}
+
+.bonusBlob {
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.bonusSection {
+  padding: 80px 0;
+  background: #080810;
+}
+
+.bonusBanner {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.contactsSection {
+  padding: 80px 0;
+  background: #0c0c14;
+}
+
+.contactsHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.contactGlass {
+  padding: 28px;
+  text-align: center;
+}
+
+.contactLabelTxt {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.contactValueTxt {
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.contactSubTxt {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.bonusIconWrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.bonusText {
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 auto 32px;
+  max-width: 400px;
+}
+
+.iconWrapMuted {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.footerRoot {
+  background: #0a0a0f;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 32px 0;
+}
+
+.footerInner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.footerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerLogoMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerBrandText {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footerBrandMuted {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.footerChip {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.2s;
+}
+
+.footerChip:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.footerDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.footerMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.copy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.footerStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+}
+
+.statusHint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.2);
+}

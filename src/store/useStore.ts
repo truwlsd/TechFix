@@ -1,45 +1,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import {
+  fetchMe,
+  loginRequest,
+  patchProfile,
+  registerRequest,
+  fetchServicesList,
+  fetchOrdersForUser,
+  createOrderRequest,
+  patchOrderStatus,
+} from "../api";
+import type { Order, OrderStatus, Service, User } from "../types/domain";
 
-export type OrderStatus =
-  | "pending"
-  | "diagnostics"
-  | "in_progress"
-  | "ready"
-  | "completed"
-  | "cancelled";
-
-export interface Order {
-  id: string;
-  serviceId: string;
-  serviceName: string;
-  servicePrice: number;
-  status: OrderStatus;
-  createdAt: string;
-  updatedAt: string;
-  deviceDescription: string;
-  bonusUsed: number;
-  bonusEarned: number;
-  masterComment?: string;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  bonusBalance: number;
-  bonusLevel: "silver" | "gold" | "platinum";
-  totalSpent: number;
-  registeredAt: string;
-  isAdmin: boolean;
-}
-
-export interface Service {
-  id: string;
-  name: string;
-  price: number;
-}
+export type { Order, OrderStatus, Service, User } from "../types/domain";
 
 interface Store {
   currentUser: User | null;
@@ -85,51 +58,6 @@ interface Store {
   closeOrderModal: () => void;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
-
-function toOrder(raw: {
-  id: string;
-  serviceId: string;
-  serviceName: string;
-  serviceBasePrice: number;
-  status: OrderStatus;
-  createdAt: string;
-  updatedAt: string;
-  deviceDescription: string;
-  bonusUsed: number;
-  bonusEarned: number;
-  masterComment: string | null;
-}): Order {
-  return {
-    id: raw.id,
-    serviceId: raw.serviceId,
-    serviceName: raw.serviceName,
-    servicePrice: raw.serviceBasePrice,
-    status: raw.status,
-    createdAt: raw.createdAt,
-    updatedAt: raw.updatedAt,
-    deviceDescription: raw.deviceDescription,
-    bonusUsed: raw.bonusUsed,
-    bonusEarned: raw.bonusEarned,
-    masterComment: raw.masterComment ?? undefined,
-  };
-}
-
-async function apiFetch(path: string, init: RequestInit = {}, token?: string | null) {
-  const headers = new Headers(init.headers ?? {});
-  headers.set("Content-Type", "application/json");
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  const res = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
-  const data = (await res.json().catch(() => null)) as { message?: string } | null;
-  if (!res.ok) {
-    throw new Error(data?.message || "Ошибка API");
-  }
-  return data;
-}
-
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
@@ -150,7 +78,7 @@ export const useStore = create<Store>()(
 
         set({ isBootstrapping: true });
         try {
-          const me = (await apiFetch("/auth/me", {}, token)) as User;
+          const me = await fetchMe(token);
           set({ currentUser: me });
           await get().refreshServices();
           await get().refreshOrders();
@@ -163,10 +91,7 @@ export const useStore = create<Store>()(
 
       login: async (email, password) => {
         try {
-          const result = (await apiFetch("/auth/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-          })) as { token: string; user: User };
+          const result = await loginRequest(email, password);
           set({ token: result.token, currentUser: result.user });
           await get().refreshOrders();
           return { ok: true };
@@ -177,10 +102,7 @@ export const useStore = create<Store>()(
 
       register: async (name, email, phone, password) => {
         try {
-          const result = (await apiFetch("/auth/register", {
-            method: "POST",
-            body: JSON.stringify({ name, email, phone, password }),
-          })) as { token: string; user: User };
+          const result = await registerRequest(name, email, phone, password);
           set({ token: result.token, currentUser: result.user });
           await get().refreshOrders();
           return { ok: true };
@@ -197,14 +119,7 @@ export const useStore = create<Store>()(
           return { ok: false, message: "Не авторизован" };
         }
         try {
-          const updatedUser = (await apiFetch(
-            "/auth/me",
-            {
-              method: "PATCH",
-              body: JSON.stringify(data),
-            },
-            token
-          )) as User;
+          const updatedUser = await patchProfile(token, data);
           set({ currentUser: updatedUser });
           return { ok: true };
         } catch (e) {
@@ -214,12 +129,8 @@ export const useStore = create<Store>()(
 
       refreshServices: async () => {
         try {
-          const result = (await apiFetch("/services")) as Array<{
-            id: string;
-            name: string;
-            price: number;
-          }>;
-          set({ services: result.map((s) => ({ id: s.id, name: s.name, price: s.price })) });
+          const services = await fetchServicesList();
+          set({ services });
         } catch {
           set({ services: ALL_SERVICES });
         }
@@ -232,21 +143,8 @@ export const useStore = create<Store>()(
           set({ orders: [] });
           return;
         }
-        const path = currentUser.isAdmin ? "/admin/orders" : "/orders/my";
-        const result = (await apiFetch(path, {}, token)) as Array<{
-          id: string;
-          serviceId: string;
-          serviceName: string;
-          serviceBasePrice: number;
-          status: OrderStatus;
-          createdAt: string;
-          updatedAt: string;
-          deviceDescription: string;
-          bonusUsed: number;
-          bonusEarned: number;
-          masterComment: string | null;
-        }>;
-        set({ orders: result.map(toOrder) });
+        const orders = await fetchOrdersForUser(token, currentUser.isAdmin);
+        set({ orders });
       },
 
       createOrder: async (serviceId, _serviceName, _servicePrice, deviceDescription, bonusUsed) => {
@@ -255,14 +153,7 @@ export const useStore = create<Store>()(
           return { ok: false, message: "Войдите в аккаунт" };
         }
         try {
-          await apiFetch(
-            "/orders",
-            {
-              method: "POST",
-              body: JSON.stringify({ serviceId, deviceDescription, bonusUsed }),
-            },
-            token
-          );
+          await createOrderRequest(token, { serviceId, deviceDescription, bonusUsed });
           await get().bootstrapSession();
           return { ok: true };
         } catch (e) {
@@ -276,14 +167,7 @@ export const useStore = create<Store>()(
           return { ok: false, message: "Не авторизован" };
         }
         try {
-          await apiFetch(
-            `/admin/orders/${orderId}/status`,
-            {
-              method: "PATCH",
-              body: JSON.stringify({ status, comment }),
-            },
-            token
-          );
+          await patchOrderStatus(token, orderId, status, comment);
           await get().bootstrapSession();
           return { ok: true };
         } catch (e) {

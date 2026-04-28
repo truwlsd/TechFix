@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { X, Eye, EyeOff, Monitor, Gift, Zap } from "lucide-react";
-import { useStore } from "../store/useStore";
+import { useStore } from "../../store/useStore";
+import styles from "./AuthModal.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -125,7 +126,7 @@ export default function AuthModal() {
 
   return (
     <div
-      className="modal-overlay"
+      className={styles.overlay}
       onMouseDown={(e) => {
         shouldCloseOnClick.current = e.target === e.currentTarget;
       }}
@@ -136,21 +137,20 @@ export default function AuthModal() {
       }}
     >
       <div
-        className="modal-content w-full max-w-md"
+        className={styles.panel}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close */}
         <button
+          type="button"
           onClick={closeAuthModal}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white/50 hover:text-white transition-all z-10"
+          className={styles.closeBtn}
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Header */}
-        <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
+        <div className={styles.header}>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+            <div className={styles.brandIcon}>
               <Monitor className="w-4 h-4 text-[#0a0a0f]" />
             </div>
             <span className="text-sm font-bold text-white/60 tracking-wider uppercase">
@@ -167,11 +167,10 @@ export default function AuthModal() {
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="px-8 py-6 space-y-4">
+        <form onSubmit={handleSubmit} className={styles.form}>
           {!isLogin && (
             <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5 uppercase tracking-wider">
+              <label className={styles.fieldLabel}>
                 Имя и фамилия
               </label>
               <input
@@ -186,26 +185,22 @@ export default function AuthModal() {
           )}
 
           <div>
-            <label className="block text-xs font-medium text-white/40 mb-1.5 uppercase tracking-wider">
-              Email
-            </label>
+            <label className={styles.fieldLabel}>Email</label>
             <input
               name="email"
               type="email"
               value={form.email}
               onChange={handleChange}
               placeholder="you@example.com"
-                autoComplete="email"
-                maxLength={120}
+              autoComplete="email"
+              maxLength={120}
               className="input-dark"
             />
           </div>
 
           {!isLogin && (
             <div>
-              <label className="block text-xs font-medium text-white/40 mb-1.5 uppercase tracking-wider">
-                Телефон
-              </label>
+              <label className={styles.fieldLabel}>Телефон</label>
               <input
                 name="phone"
                 value={form.phone}
@@ -220,10 +215,8 @@ export default function AuthModal() {
           )}
 
           <div>
-            <label className="block text-xs font-medium text-white/40 mb-1.5 uppercase tracking-wider">
-              Пароль
-            </label>
-            <div className="relative">
+            <label className={styles.fieldLabel}>Пароль</label>
+            <div className={styles.passWrap}>
               <input
                 name="password"
                 type={showPass ? "text" : "password"}
@@ -237,8 +230,8 @@ export default function AuthModal() {
               />
               <button
                 type="button"
+                className={styles.togglePass}
                 onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
               >
                 {showPass ? (
                   <EyeOff className="w-4 h-4" />
@@ -250,9 +243,7 @@ export default function AuthModal() {
           </div>
 
           {error && (
-            <div className="bg-red-500/[0.08] border border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-400">
-              {error}
-            </div>
+            <div className={styles.errBanner}>{error}</div>
           )}
 
           <button
@@ -289,12 +280,12 @@ export default function AuthModal() {
             </button>
           )}
 
-          <p className="text-center text-sm text-white/30">
+          <p className={styles.footerSwitch}>
             {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
             <button
               type="button"
+              className={styles.switchBtn}
               onClick={() => openAuthModal(isLogin ? "register" : "login")}
-              className="text-white hover:text-white/80 font-medium underline underline-offset-2 transition-colors"
             >
               {isLogin ? "Зарегистрироваться" : "Войти"}
             </button>

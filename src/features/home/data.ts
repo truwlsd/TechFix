@@ -12,7 +12,6 @@ import {
   MousePointer,
   Phone,
   Shield,
-  Star,
   TrendingUp,
   Users,
   Wrench,

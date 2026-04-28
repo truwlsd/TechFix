@@ -62,6 +62,16 @@ export default function Navbar() {
   const location    = useLocation();
   const navigate    = useNavigate();
 
+  const goToHomeTop = () => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const searchResults = (services.length ? services : [])
     .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase().trim()))
     .slice(0, 6);
@@ -94,6 +104,17 @@ export default function Navbar() {
     setSearchQuery("");
   }, [location]);
 
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -118,7 +139,14 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
 
             {/* ── Logo ── */}
-            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <Link
+              to="/"
+              className="flex items-center gap-2.5 flex-shrink-0"
+              onClick={(e) => {
+                e.preventDefault();
+                goToHomeTop();
+              }}
+            >
               <div style={{
                 width: 36, height: 36, borderRadius: 10,
                 background: "#ffffff",
@@ -155,6 +183,10 @@ export default function Navbar() {
                 onMouseLeave={e => {
                   if (!isActive("/")) e.currentTarget.style.color = "rgba(255,255,255,0.55)";
                   if (!isActive("/")) e.currentTarget.style.background = "transparent";
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  goToHomeTop();
                 }}
               >
                 Главная
@@ -621,7 +653,7 @@ export default function Navbar() {
 
         {/* ── Mobile Menu ── */}
         {menuOpen && (
-          <div style={{
+          <div className="md:hidden" style={{
             background: "rgba(8,8,14,0.99)",
             backdropFilter: "blur(20px)",
             borderTop: "1px solid rgba(255,255,255,0.06)",
@@ -654,13 +686,25 @@ export default function Navbar() {
               { to: "/services", label: "Услуги" },
               { to: "/cabinet", label: "Личный кабинет" },
             ].map(l => (
-              <Link key={l.to} to={l.to} onClick={() => setMenuOpen(false)}
+              <Link
+                key={l.to}
+                to={l.to}
                 style={{
                   display: "block", padding: "11px 14px",
                   borderRadius: 10, fontSize: 14, fontWeight: 500,
                   color: isActive(l.to) ? "#fff" : "rgba(255,255,255,0.5)",
                   background: isActive(l.to) ? "rgba(255,255,255,0.08)" : "transparent",
                   marginBottom: 2,
+                }}
+                onClick={(e) => {
+                  if (l.to === "/") {
+                    e.preventDefault();
+                    setMenuOpen(false);
+                    goToHomeTop();
+                    return;
+                  }
+
+                  setMenuOpen(false);
                 }}
               >
                 {l.label}

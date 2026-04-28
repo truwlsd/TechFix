@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, CheckCircle, Clock, Shield } from "lucide-react";
 import OrderModal from "../components/OrderModal";
+import { FooterSection } from "../features/home/sections";
 import { useStore, type Service } from "../store/useStore";
 
 interface ServiceView extends Service {
@@ -101,6 +102,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      <FooterSection />
       <OrderModal service={selectedService} onClose={() => setSelectedService(null)} />
     </div>
   );

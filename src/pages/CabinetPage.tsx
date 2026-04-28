@@ -5,6 +5,7 @@ import {
   Wrench, AlertCircle, ChevronRight, Settings, Edit2, Save, X,
   TrendingUp, Zap, ArrowRight, Shield,
 } from "lucide-react";
+import { FooterSection } from "../features/home/sections";
 import { useStore, Order, OrderStatus } from "../store/useStore";
 
 interface CabinetPageProps {
@@ -41,6 +42,7 @@ function AdminPanel() {
   const [selectedId, setSelectedId] = useState("");
   const [selStatus, setSelStatus]   = useState<OrderStatus>("pending");
   const [comment, setComment]       = useState("");
+  const [adminError, setAdminError] = useState("");
 
   return (
     <div
@@ -56,7 +58,10 @@ function AdminPanel() {
       <div className="space-y-3">
         <select
           value={selectedId}
-          onChange={(e) => setSelectedId(e.target.value)}
+          onChange={(e) => {
+            setSelectedId(e.target.value);
+            setAdminError("");
+          }}
           className="input-dark"
         >
           <option value="">Выберите заказ</option>
@@ -69,7 +74,10 @@ function AdminPanel() {
 
         <select
           value={selStatus}
-          onChange={(e) => setSelStatus(e.target.value as OrderStatus)}
+          onChange={(e) => {
+            setSelStatus(e.target.value as OrderStatus);
+            setAdminError("");
+          }}
           className="input-dark"
         >
           {(Object.keys(STATUS_MAP) as OrderStatus[]).map((s) => (
@@ -79,18 +87,38 @@ function AdminPanel() {
 
         <input
           value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          onChange={(e) => {
+            setComment(e.target.value);
+            setAdminError("");
+          }}
           placeholder="Комментарий мастера (опционально)"
+          maxLength={250}
           className="input-dark"
         />
 
+        {adminError && (
+          <div className="rounded-xl border border-red-500/20 bg-red-500/[0.08] px-4 py-3 text-sm text-red-400">
+            {adminError}
+          </div>
+        )}
+
         <button
           onClick={async () => {
-            if (selectedId) {
-              const result = await updateOrderStatus(selectedId, selStatus, comment || undefined);
-              if (result.ok) {
-                setComment("");
-              }
+            if (!selectedId) {
+              setAdminError("Выберите заказ для обновления");
+              return;
+            }
+            if (comment.trim().length > 250) {
+              setAdminError("Комментарий слишком длинный (максимум 250 символов)");
+              return;
+            }
+
+            const result = await updateOrderStatus(selectedId, selStatus, comment.trim() || undefined);
+            if (result.ok) {
+              setComment("");
+              setAdminError("");
+            } else {
+              setAdminError(result.message || "Не удалось обновить статус");
             }
           }}
           disabled={!selectedId}
@@ -295,7 +323,22 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
   const [activeTab, setActiveTab] = useState<TabId>(initialTab);
   const [editMode, setEditMode]   = useState(false);
   const [editForm, setEditForm]   = useState({ name: "", phone: "" });
+  const [profileError, setProfileError] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+
+  const validateProfile = () => {
+    const normalizedName = editForm.name.trim().replace(/\s+/g, " ");
+    const phoneDigits = editForm.phone.replace(/\D/g, "");
+
+    if (normalizedName.length < 2) {
+      return "Введите корректное имя";
+    }
+    if (phoneDigits.length < 11 || !phoneDigits.startsWith("7")) {
+      return "Введите телефон в формате +7XXXXXXXXXX";
+    }
+
+    return "";
+  };
 
   /* ── не авторизован ── */
   if (!currentUser) {
@@ -666,6 +709,7 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
                   <button
                     onClick={() => {
                       setEditForm({ name: currentUser.name, phone: currentUser.phone });
+                      setProfileError("");
                       setEditMode(true);
                     }}
                     className="flex items-center gap-1.5 text-sm text-white/35 hover:text-white transition-colors"
@@ -676,9 +720,21 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
                   <div className="flex items-center gap-3">
                     <button
                       onClick={async () => {
-                        const result = await updateUser(editForm);
+                        const validationError = validateProfile();
+                        if (validationError) {
+                          setProfileError(validationError);
+                          return;
+                        }
+
+                        const result = await updateUser({
+                          name: editForm.name.trim().replace(/\s+/g, " "),
+                          phone: editForm.phone.trim(),
+                        });
                         if (result.ok) {
+                          setProfileError("");
                           setEditMode(false);
+                        } else {
+                          setProfileError(result.message || "Не удалось сохранить профиль");
                         }
                       }}
                       className="flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 transition-colors"
@@ -686,7 +742,10 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
                       <Save className="w-4 h-4" /> Сохранить
                     </button>
                     <button
-                      onClick={() => setEditMode(false)}
+                      onClick={() => {
+                        setProfileError("");
+                        setEditMode(false);
+                      }}
                       className="text-white/25 hover:text-white/50 transition-colors"
                     >
                       <X className="w-4 h-4" />
@@ -709,7 +768,11 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
                     {editMode && f.editable ? (
                       <input
                         value={f.val}
-                        onChange={(e) => setEditForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                        onChange={(e) => {
+                          setProfileError("");
+                          setEditForm((prev) => ({ ...prev, [f.key]: e.target.value }));
+                        }}
+                        maxLength={f.key === "phone" ? 20 : 80}
                         className="input-dark"
                       />
                     ) : (
@@ -723,6 +786,12 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
                   </div>
                 ))}
               </div>
+
+              {editMode && profileError && (
+                <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/[0.08] px-4 py-3 text-sm text-red-400">
+                  {profileError}
+                </div>
+              )}
 
               <div
                 className="mt-6 pt-6"
@@ -782,8 +851,7 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
         )}
       </div>
 
-      {/* ══ ФИКС БЕЛОГО НИЗА ══ */}
-      <div style={{ background: "#0a0a0f", height: "120px" }} />
+      <FooterSection />
     </div>
   );
 }

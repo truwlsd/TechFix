@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { X, Wrench, Gift, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import { useStore } from "../store/useStore";
 
@@ -20,6 +20,7 @@ export default function OrderModal({ service, onClose }: Props) {
   const [bonusUsed, setBonusUsed] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const shouldCloseOnClick = useRef(false);
 
   if (!service) return null;
 
@@ -37,16 +38,25 @@ export default function OrderModal({ service, onClose }: Props) {
       openAuthModal("login");
       return;
     }
-    if (!deviceDescription.trim()) {
+    const normalizedDescription = deviceDescription.trim();
+    if (!normalizedDescription) {
       setError("Опишите вашу проблему или устройство");
+      return;
+    }
+    if (normalizedDescription.length < 10) {
+      setError("Описание должно быть не короче 10 символов");
+      return;
+    }
+    if (normalizedDescription.length > 500) {
+      setError("Описание слишком длинное (максимум 500 символов)");
       return;
     }
     const result = await createOrder(
       service.id,
       service.name,
       service.price,
-      deviceDescription,
-      bonusUsed
+      normalizedDescription,
+      Math.min(Math.max(Math.trunc(bonusUsed), 0), maxBonus)
     );
     if (!result.ok) {
       setError(result.message || "Не удалось оформить заказ");
@@ -56,7 +66,17 @@ export default function OrderModal({ service, onClose }: Props) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onMouseDown={(e) => {
+        shouldCloseOnClick.current = e.target === e.currentTarget;
+      }}
+      onClick={(e) => {
+        if (shouldCloseOnClick.current && e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div
         className="modal-content w-full max-w-lg"
         onClick={(e) => e.stopPropagation()}
@@ -128,6 +148,8 @@ export default function OrderModal({ service, onClose }: Props) {
                   }}
                   placeholder="Например: MacBook Pro 2020 — не заряжается, вылетает из розетки"
                   rows={3}
+                  minLength={10}
+                  maxLength={500}
                   className="input-dark resize-none"
                 />
               </div>

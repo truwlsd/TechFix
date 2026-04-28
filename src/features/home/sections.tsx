@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle,
@@ -484,6 +484,19 @@ export function ContactsSection() {
 }
 
 export function FooterSection() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const goToHomeTop = () => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer style={{ background: "#0a0a0f", borderTop: "1px solid rgba(255,255,255,0.06)", padding: "32px 0" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -497,7 +510,19 @@ export function FooterSection() {
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {FOOTER_LINKS.map((l) => (
-                <Link key={l.to} to={l.to} style={{ padding: "6px 14px", borderRadius: 50, fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.07)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }} onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; }}>
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  style={{ padding: "6px 14px", borderRadius: 50, fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.07)", transition: "all 0.2s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; }}
+                  onClick={(e) => {
+                    if (l.to === "/") {
+                      e.preventDefault();
+                      goToHomeTop();
+                    }
+                  }}
+                >
                   {l.label}
                 </Link>
               ))}

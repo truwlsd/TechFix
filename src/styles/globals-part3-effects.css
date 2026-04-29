@@ -1,0 +1,275 @@
+﻿/* ===== CRITICAL FIXES ===== */
+
+/* Убираем любой белый фон у html/body */
+html, body, #root {
+  background: #0a0a0f !important;
+  color: #ffffff;
+}
+
+/* Фикс select в тёмной теме */
+select option {
+  background: #1a1a2e;
+  color: #ffffff;
+}
+
+/* ===== НОВЫЕ ИНТЕРАКТИВНЫЕ АНИМАЦИИ ===== */
+
+/* Parallax scroll reveal */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes revealLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes revealRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes morphBg {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50%      { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20%      { transform: translate(-2px, 2px); }
+  40%      { transform: translate(-2px, -2px); }
+  60%      { transform: translate(2px, 2px); }
+  80%      { transform: translate(2px, -2px); }
+}
+
+.animate-revealUp {
+  animation: revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-revealLeft {
+  animation: revealLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-revealRight {
+  animation: revealRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-morph {
+  animation: morphBg 8s ease-in-out infinite;
+}
+
+.animate-glitch:hover {
+  animation: glitch 0.3s ease;
+}
+
+/* ===== MARQUEE (бегущая строка) ===== */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ===== CURSOR GLOW ===== */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* ===== TILT CARD ===== */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease;
+}
+
+/* ===== STAGGER CHILDREN ===== */
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ===== NOISE OVERLAY ===== */
+.noise::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ===== HORIZONTAL SCROLL SECTION ===== */
+.horizontal-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 8px;
+}
+
+.horizontal-scroll::-webkit-scrollbar { display: none; }
+
+.horizontal-scroll > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ===== COUNTER ANIMATION ===== */
+.count-animate {
+  animation: countUp 0.6s ease forwards;
+}
+
+/* ===== HIGHLIGHT TEXT ===== */
+.highlight {
+  position: relative;
+  display: inline-block;
+}
+
+.highlight::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  z-index: -1;
+  border-radius: 2px;
+}
+
+/* ===== MAGNETIC BUTTON ===== */
+.magnetic {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== SPLIT TEXT ===== */
+.split-char {
+  display: inline-block;
+  animation: revealUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-line {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255,255,255,0.1) 20%,
+    rgba(255,255,255,0.1) 80%,
+    transparent
+  );
+}
+
+/* ===== SECTION TRANSITION ===== */
+.section-dark-1 { background: #0a0a0f; }
+.section-dark-2 { background: #080810; }
+.section-dark-3 { background: #0c0c14; }
+
+/* Плавный переход между секциями */
+section + section {
+  position: relative;
+}
+
+/* ===== ФИКС ФУТЕРА ===== */
+footer {
+  background: #0a0a0f !important;
+  color: rgba(255,255,255,0.3) !important;
+}
+
+/* ===== ФИКС КАБИНЕТА ===== */
+.cabinet-bg {
+  background: #0a0a0f;
+  min-height: 100vh;
+}
+
+/* ===== SCROLL INDICATOR ===== */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50%       { transform: translateY(8px); opacity: 1; }
+}
+
+.scroll-indicator {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ===== BLOB ===== */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.04;
+  animation: morphBg 12s ease-in-out infinite;
+}

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, CheckCircle, Clock, Shield } from "lucide-react";
-import OrderModal from "../components/OrderModal";
-import { FooterSection } from "../features/home/sections";
-import { useStore, type Service } from "../store/useStore";
+import OrderModal from "../../components/OrderModal";
+import { FooterSection } from "../../features/home/sections";
+import { useStore, type Service } from "../../store/useStore";
+import styles from "./ServicesPage.module.css";
 
 interface ServiceView extends Service {
   priceLabel: string;
@@ -46,7 +47,7 @@ export default function ServicesPage() {
   }, [services]);
 
   return (
-    <div className="min-h-screen">
+    <div className={styles.page}>
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-dark-gradient" />
         <div className="absolute inset-0 bg-grid opacity-50" />

@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import ServicesPage from "./pages/ServicesPage";
 import CabinetPage from "./pages/CabinetPage";
 import { useStore } from "./store/useStore";
+import styles from "./App.module.css";
 
 export default function App() {
   const bootstrapSession = useStore((s) => s.bootstrapSession);
@@ -19,7 +20,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen bg-gray-50">
+      <div className={styles.shell}>
         <Navbar />
         <AuthModal />
         <Routes>

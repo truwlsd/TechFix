@@ -1,12 +1,20 @@
 {
-  "name": "react-vite-tailwind",
+  "name": "techfix",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:all": "concurrently -n frontend,backend -c blue,green \"npm run dev\" \"npm run dev:backend\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -18,14 +26,24 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@eslint/js": "9.37.0",
     "@tailwindcss/vite": "4.1.17",
     "@types/node": "22.19.17",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
+    "concurrently": "9.2.1",
+    "eslint": "9.37.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-refresh": "0.4.23",
+    "globals": "16.4.0",
+    "prettier": "3.6.2",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.46.1",
     "vite": "7.2.4",
-    "vite-plugin-singlefile": "2.3.0"
+    "vite-plugin-singlefile": "2.3.0",
+    "vitest": "3.2.4"
   }
 }

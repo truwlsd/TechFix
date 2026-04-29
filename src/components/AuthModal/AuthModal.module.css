@@ -1,0 +1,129 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.panel {
+  background: rgba(15, 15, 25, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 28rem;
+  position: relative;
+  overflow: hidden;
+  animation: scaleIn 0.3s ease;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.06);
+  border: none;
+  cursor: pointer;
+  color: rgb(255 255 255 / 0.5);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.closeBtn:hover {
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+
+.header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+}
+
+.brandIcon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.4);
+  margin-bottom: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.passWrap {
+  position: relative;
+}
+
+.togglePass {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(255 255 255 / 0.3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.togglePass:hover {
+  color: rgb(255 255 255 / 0.6);
+}
+
+.errBanner {
+  background: rgb(239 68 68 / 0.08);
+  border: 1px solid rgb(239 68 68 / 0.2);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: rgb(248 113 113);
+}
+
+.footerSwitch {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgb(255 255 255 / 0.3);
+}
+
+.switchBtn {
+  color: rgb(255 255 255);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.switchBtn:hover {
+  color: rgb(255 255 255 / 0.8);
+}

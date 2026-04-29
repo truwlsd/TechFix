@@ -68,6 +68,7 @@ router.post("/register", async (req, res) => {
       bonusLevel: user.bonusLevel,
       totalSpent: user.totalSpent,
       isAdmin: user.isAdmin,
+      registeredAt: user.registeredAt,
     },
   });
 });
@@ -101,6 +102,7 @@ router.post("/login", async (req, res) => {
       bonusLevel: user.bonusLevel,
       totalSpent: user.totalSpent,
       isAdmin: user.isAdmin,
+      registeredAt: user.registeredAt,
     },
   });
 });

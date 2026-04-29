@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import OrderModal from "../components/OrderModal";
-import { useStore } from "../store/useStore";
+import OrderModal from "../../components/OrderModal";
+import { useStore } from "../../store/useStore";
 import {
   ContactsSection,
   FaqSection,
@@ -9,8 +9,9 @@ import {
   HeroSection,
   HowItWorksSection,
   PopularServicesSection,
-} from "../features/home/sections";
-import type { HomeService } from "../features/home/data";
+} from "../../features/home/sections";
+import type { HomeService } from "../../features/home/data";
+import styles from "./HomePage.module.css";
 
 export default function HomePage() {
   const { openAuthModal, currentUser } = useStore();
@@ -24,7 +25,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div style={{ background: "#0a0a0f", minHeight: "100vh" }}>
+    <div className={styles.page}>
       <HeroSection
         currentUser={currentUser}
         mousePos={mousePos}

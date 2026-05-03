@@ -8,6 +8,14 @@
   background: #0a0a0f;
 }
 
+/* На мобильных второй колонки нет — полный экран + center даёт пустоту сверху/снизу */
+@media (max-width: 1023px) {
+  .hero {
+    min-height: 0;
+    justify-content: flex-start;
+  }
+}
+
 .scrollChevronWrap {
   position: absolute;
   bottom: 32px;

@@ -19,6 +19,8 @@ interface Store {
   token: string | null;
   orders: Order[];
   services: Service[];
+  /** false until first refreshServices() finishes (success, fallback, or error). */
+  servicesHydrated: boolean;
   isBootstrapping: boolean;
 
   login: (email: string, password: string) => Promise<{ ok: boolean; message?: string }>;
@@ -65,6 +67,7 @@ export const useStore = create<Store>()(
       token: null,
       orders: [],
       services: [],
+      servicesHydrated: false,
       isBootstrapping: false,
 
       isAuthModalOpen: false,
@@ -133,6 +136,8 @@ export const useStore = create<Store>()(
           set({ services });
         } catch {
           set({ services: ALL_SERVICES });
+        } finally {
+          set({ servicesHydrated: true });
         }
       },
 

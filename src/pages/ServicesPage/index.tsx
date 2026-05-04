@@ -27,6 +27,7 @@ function buildDescription(name: string): string {
 
 export default function ServicesPage() {
   const services = useStore((s) => s.services);
+  const servicesHydrated = useStore((s) => s.servicesHydrated);
   const [selectedService, setSelectedService] = useState<ServiceView | null>(null);
 
   const grouped = useMemo(() => {
@@ -75,8 +76,15 @@ export default function ServicesPage() {
       <section className="relative pb-24">
         <div className="absolute inset-0 bg-[#080810]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          {Object.keys(grouped).length === 0 && (
+          {!servicesHydrated && Object.keys(grouped).length === 0 && (
             <div className="glass-card p-8 text-center text-white/40">Услуги загружаются...</div>
+          )}
+
+          {servicesHydrated && Object.keys(grouped).length === 0 && (
+            <div className="glass-card p-8 text-center text-white/60">
+              В каталоге пока нет услуг. Проверьте, что на сервере выполнены миграции и сидирование базы
+              (например, команда seed в логах Render).
+            </div>
           )}
 
           {Object.entries(grouped).map(([category, items]) => (

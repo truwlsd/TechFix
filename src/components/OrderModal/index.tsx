@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { X, Wrench, Gift, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import { useStore } from "../../store/useStore";
@@ -23,6 +23,14 @@ export default function OrderModal({ service, onClose }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const shouldCloseOnClick = useRef(false);
+
+  const serviceKey = service?.id ?? "";
+  useEffect(() => {
+    setSubmitted(false);
+    setDeviceDescription("");
+    setBonusUsed(0);
+    setError("");
+  }, [serviceKey]);
 
   if (!service) return null;
 

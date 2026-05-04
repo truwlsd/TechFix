@@ -10,9 +10,16 @@ import adminRoutes from "./routes/admin.js";
 const app = express();
 const port = Number(process.env.PORT || 4000);
 
+const isProd = process.env.NODE_ENV === "production";
+const corsOrigin =
+  process.env.CORS_ORIGIN?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    // В dev разрешаем любой Origin (удобно для vite --host и телефона в той же сети)
+    origin: isProd
+      ? (corsOrigin.length ? corsOrigin : "http://localhost:5173")
+      : true,
   })
 );
 app.use(express.json());

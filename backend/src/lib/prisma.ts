@@ -1,7 +1,10 @@
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 const dbUrl = process.env.DATABASE_URL || "file:./dev.db";
-const adapter = new PrismaBetterSqlite3({ url: dbUrl });
+
+/** libSQL вместо better-sqlite3 — без нативного ABI-конфликта при смене версии Node. */
+const adapter = new PrismaLibSql({ url: dbUrl });
 
 export const prisma = new PrismaClient({ adapter });

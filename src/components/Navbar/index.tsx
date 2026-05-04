@@ -6,7 +6,7 @@ import {
   Wrench, Battery, Camera, Keyboard, Settings, ArrowRight,
 } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { useStore } from "../../store/useStore";
+import { useStore, ALL_SERVICES } from "../../store/useStore";
 import styles from "./Navbar.module.css";
 
 const MEGA_MENU = [
@@ -74,8 +74,9 @@ export default function Navbar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const searchResults = (services.length ? services : [])
-    .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase().trim()))
+  const catalog = services.length ? services : ALL_SERVICES;
+  const searchResults = catalog
+    .filter((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase().trim()))
     .slice(0, 6);
 
   useEffect(() => {

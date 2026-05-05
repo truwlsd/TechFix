@@ -1,3 +1,23 @@
 .page {
   min-height: 100vh;
 }
+
+/* без backdrop-filter: при скролле не пересчитывается blur под каждым блоком категории */
+.categoryPanel {
+  background: rgba(255, 255, 255, 0.038);
+  border: 1px solid rgba(255, 255, 255, 0.082);
+  border-radius: 20px;
+}
+
+.cardImageWrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

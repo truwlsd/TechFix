@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, CheckCircle, Clock, Shield } from "lucide-react";
 import OrderModal from "../../components/OrderModal";
+import { getServiceCardImageUrl } from "../../data/serviceCardImages";
 import { FooterSection } from "../../features/home/sections";
 import { useStore, type Service } from "../../store/useStore";
 import styles from "./ServicesPage.module.css";
@@ -8,6 +9,7 @@ import styles from "./ServicesPage.module.css";
 interface ServiceView extends Service {
   priceLabel: string;
   desc: string;
+  imageUrl: string;
 }
 
 const CATEGORY_BY_ID: Array<{ category: string; test: (id: string) => boolean }> = [
@@ -36,6 +38,7 @@ export default function ServicesPage() {
       category: getCategory(service.id),
       priceLabel: `${service.price.toLocaleString("ru-RU")} ₽`,
       desc: buildDescription(service.name),
+      imageUrl: getServiceCardImageUrl(service.id),
     }));
 
     return rows.reduce<Record<string, ServiceView[]>>((acc, service) => {
@@ -77,22 +80,35 @@ export default function ServicesPage() {
         <div className="absolute inset-0 bg-[#080810]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           {!servicesHydrated && Object.keys(grouped).length === 0 && (
-            <div className="glass-card p-8 text-center text-white/40">Услуги загружаются...</div>
+            <div className={`${styles.categoryPanel} p-8 text-center text-white/40`}>Услуги загружаются...</div>
           )}
 
           {servicesHydrated && Object.keys(grouped).length === 0 && (
-            <div className="glass-card p-8 text-center text-white/60">
+            <div className={`${styles.categoryPanel} p-8 text-center text-white/60`}>
               В каталоге пока нет услуг. Проверьте, что на сервере выполнены миграции и сидирование базы
               (например, команда seed в логах Render).
             </div>
           )}
 
           {Object.entries(grouped).map(([category, items]) => (
-            <div key={category} className="glass-card p-6">
+            <div key={category} className={`${styles.categoryPanel} p-6`}>
               <h2 className="text-xl font-bold text-white mb-4">{category}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {items.map((service) => (
                   <div key={service.id} className="service-card">
+                    <div className={styles.cardImageWrap}>
+                      <img
+                        className={styles.cardImage}
+                        src={service.imageUrl}
+                        alt={service.name}
+                        width={640}
+                        height={400}
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                        sizes="(max-width:768px) 100vw,(max-width:1024px) 50vw,33vw"
+                      />
+                    </div>
                     <div className="p-5">
                       <h3 className="font-bold text-white mb-2">{service.name}</h3>
                       <p className="text-sm text-white/35 leading-relaxed">{service.desc}</p>

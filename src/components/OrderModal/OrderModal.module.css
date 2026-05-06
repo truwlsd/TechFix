@@ -24,6 +24,33 @@
   animation: scaleIn 0.3s ease;
 }
 
+@media (max-width: 767px) {
+  .overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.78);
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 18px;
+    max-width: 100%;
+    animation: none;
+  }
+
+  .header {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  .form {
+    padding: 1rem 1.25rem 1.25rem;
+    gap: 1rem;
+  }
+}
+
 .closeBtn {
   position: absolute;
   top: 1rem;

@@ -273,3 +273,25 @@ footer {
   opacity: 0.04;
   animation: morphBg 12s ease-in-out infinite;
 }
+
+@media (max-width: 767px) {
+  .cursor-glow,
+  .noise::after,
+  .blob {
+    display: none !important;
+  }
+
+  .animate-revealUp,
+  .animate-revealLeft,
+  .animate-revealRight,
+  .animate-morph,
+  .animate-marquee,
+  .scroll-indicator,
+  .count-animate,
+  .split-char {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

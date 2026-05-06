@@ -539,40 +539,9 @@
   transform: scale(0.97);
 }
 
-.mobileQuickAuthWrap {
-  display: none;
-}
-
 @media (max-width: 767px) {
   .mobileBurgerBtn {
     display: flex;
-  }
-
-  .mobileQuickAuthWrap {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .mobileQuickLoginBtn,
-  .mobileQuickRegisterBtn {
-    border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 10px;
-    border: 1px solid transparent;
-    white-space: nowrap;
-  }
-
-  .mobileQuickLoginBtn {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.14);
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .mobileQuickRegisterBtn {
-    background: #ffffff;
-    color: #0a0a0f;
   }
 
   .root {

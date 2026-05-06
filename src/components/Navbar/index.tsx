@@ -261,6 +261,24 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-2">
+              {!currentUser && location.pathname === "/" && (
+                <div className={styles.mobileQuickAuthWrap}>
+                  <button
+                    type="button"
+                    className={styles.mobileQuickLoginBtn}
+                    onClick={() => openAuthModal("login")}
+                  >
+                    Вход
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.mobileQuickRegisterBtn}
+                    onClick={() => openAuthModal("register")}
+                  >
+                    Регистрация
+                  </button>
+                </div>
+              )}
 
               <div className="relative hidden md:block" ref={searchRef}>
                 <div
@@ -455,6 +473,22 @@ export default function Navbar() {
                   onClick={() => { openAuthModal("register"); setMenuOpen(false); }}
                 >
                   <Zap className="w-4 h-4" /> Зарегистрироваться
+                </button>
+              </div>
+            )}
+
+            {currentUser && (
+              <div className={styles.mobileAuthWrap}>
+                <button
+                  type="button"
+                  className={styles.mobileLogoutBtn}
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                    navigate("/");
+                  }}
+                >
+                  <LogOut className="w-4 h-4" /> Выйти из аккаунта
                 </button>
               </div>
             )}

@@ -19,9 +19,22 @@ export default function HomePage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const move = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    let rafId = 0;
+    const move = (e: MouseEvent) => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+        rafId = 0;
+      });
+    };
+
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", move);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
@@ -29,6 +42,7 @@ export default function HomePage() {
       <HeroSection
         currentUser={currentUser}
         mousePos={mousePos}
+        onLoginClick={() => openAuthModal("login")}
         onRegisterClick={() => openAuthModal("register")}
       />
       <PopularServicesSection onOrder={setSelectedService} />

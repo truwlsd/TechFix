@@ -3,6 +3,7 @@ import {
   CheckCircle,
   ChevronDown,
   Gift,
+  LogIn,
   Monitor,
   Star,
   Users,
@@ -20,9 +21,11 @@ import s from "./sections.module.css";
 export function HeroSection({
   currentUser,
   mousePos,
+  onLoginClick,
   onRegisterClick,
 }: HomeSectionsUserProp & {
   mousePos: { x: number; y: number };
+  onLoginClick: () => void;
   onRegisterClick: () => void;
 }) {
   return (
@@ -54,6 +57,17 @@ export function HeroSection({
             <p className="text-lg leading-relaxed mb-10 animate-revealUp max-w-md" style={{ color: "rgba(255,255,255,0.4)", animationDelay: "0.25s" }}>
               Профессиональный ремонт ноутбуков и ПК с гарантией 90 дней. Кэшбэк 5% бонусами с каждого заказа.
             </p>
+
+            {!currentUser && (
+              <div className="md:hidden grid grid-cols-2 gap-2 mb-5 animate-revealUp" style={{ animationDelay: "0.28s" }}>
+                <button type="button" onClick={onLoginClick} className="btn-ghost justify-center py-3">
+                  <LogIn className="w-4 h-4" /> Вход
+                </button>
+                <button type="button" onClick={onRegisterClick} className="btn-primary justify-center py-3">
+                  Регистрация
+                </button>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-3 mb-12 animate-revealUp" style={{ animationDelay: "0.3s" }}>
               <Link to={HERO_PRIMARY_CTA.to} className="btn-primary text-base px-8 py-4">

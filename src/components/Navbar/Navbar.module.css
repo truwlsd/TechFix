@@ -526,17 +526,64 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.mobileBurgerBtn:active {
+  transform: scale(0.97);
+}
+
+.mobileQuickAuthWrap {
+  display: none;
 }
 
 @media (max-width: 767px) {
   .mobileBurgerBtn {
     display: flex;
+  }
+
+  .mobileQuickAuthWrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mobileQuickLoginBtn,
+  .mobileQuickRegisterBtn {
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  .mobileQuickLoginBtn {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .mobileQuickRegisterBtn {
+    background: #ffffff;
+    color: #0a0a0f;
+  }
+
+  .root {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(8, 8, 14, 0.96);
+  }
+
+  .mobilePanel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }
 
@@ -612,6 +659,26 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.mobileLogoutBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.mobileLogoutBtn:active {
+  transform: translateY(1px);
 }
 
 .spacer {

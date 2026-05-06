@@ -539,8 +539,25 @@
   transform: scale(0.97);
 }
 
+.mobileSearchBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 @media (max-width: 767px) {
   .mobileBurgerBtn {
+    display: flex;
+  }
+
+  .mobileSearchBtn {
     display: flex;
   }
 
@@ -558,6 +575,10 @@
 
 @media (min-width: 768px) {
   .mobileBurgerBtn {
+    display: none !important;
+  }
+
+  .mobileSearchBtn {
     display: none !important;
   }
 }
@@ -581,6 +602,10 @@
   margin-bottom: 12px;
 }
 
+.mobileSearchDock {
+  display: none;
+}
+
 .mobileSearchInner {
   display: flex;
   align-items: center;
@@ -602,6 +627,25 @@
   font-size: 14px;
   color: #fff;
   flex: 1;
+}
+
+.mobileSearchCloseBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileSearchResults {
+  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .mobileNavLink {
@@ -648,6 +692,15 @@
 
 .mobileLogoutBtn:active {
   transform: translateY(1px);
+}
+
+@media (max-width: 767px) {
+  .mobileSearchDock {
+    display: block;
+    padding: 10px 16px 6px;
+    background: rgba(8, 8, 14, 0.98);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
 }
 
 .spacer {

@@ -55,6 +55,7 @@ export default function Navbar() {
   const [megaOpen, setMegaOpen]         = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchOpen, setSearchOpen]     = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery]   = useState("");
   const [scrolled, setScrolled]       = useState(false);
 
@@ -104,6 +105,7 @@ export default function Navbar() {
     setMegaOpen(false);
     setDropdownOpen(false);
     setSearchOpen(false);
+    setMobileSearchOpen(false);
     setSearchQuery("");
   }, [location]);
 
@@ -393,6 +395,15 @@ export default function Navbar() {
 
               <button
                 type="button"
+                aria-label={mobileSearchOpen ? "Закрыть поиск" : "Открыть поиск"}
+                className={styles.mobileSearchBtn}
+                onClick={() => setMobileSearchOpen((v) => !v)}
+              >
+                <Search className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
                 aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
                 className={styles.mobileBurgerBtn}
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -403,18 +414,58 @@ export default function Navbar() {
           </div>
         </div>
 
+        {mobileSearchOpen && (
+          <div className={styles.mobileSearchDock}>
+            <div className={styles.mobileSearchInner}>
+              <Search className={`w-4 h-4 ${styles.mobileSearchIcon}`} />
+              <input
+                placeholder="Поиск услуг..."
+                className={styles.mobileSearchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+              />
+              <button
+                type="button"
+                className={styles.mobileSearchCloseBtn}
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                aria-label="Закрыть поиск"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {searchQuery.trim() && (
+              <div className={styles.mobileSearchResults}>
+                {searchResults.length > 0 ? (
+                  searchResults.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={styles.searchResultBtn}
+                      onClick={() => {
+                        setMobileSearchOpen(false);
+                        setSearchQuery("");
+                        navigate("/services");
+                        setTimeout(() => openOrderModal(s), 100);
+                      }}
+                    >
+                      <span className={styles.searchResultName}>{s.name}</span>
+                      <span className={styles.searchResultPrice}>{s.price} ₽</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className={styles.searchEmpty}>Ничего не найдено</div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {menuOpen && (
           <div className={styles.mobilePanel}>
-            <div className={styles.mobileSearchWrap}>
-              <div className={styles.mobileSearchInner}>
-                <Search className={`w-4 h-4 ${styles.mobileSearchIcon}`} />
-                <input
-                  placeholder="Поиск услуг..."
-                  className={styles.mobileSearchInput}
-                />
-              </div>
-            </div>
-
             {[
               { to: "/", label: "Главная" },
               { to: "/services", label: "Услуги" },

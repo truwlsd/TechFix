@@ -21,12 +21,14 @@ export default function OrderModal({ service, onClose }: Props) {
   const [deviceDescription, setDeviceDescription] = useState("");
   const [bonusUsed, setBonusUsed] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const shouldCloseOnClick = useRef(false);
 
   const serviceKey = service?.id ?? "";
   useEffect(() => {
     setSubmitted(false);
+    setIsSubmitting(false);
     setDeviceDescription("");
     setBonusUsed(0);
     setError("");
@@ -62,6 +64,7 @@ export default function OrderModal({ service, onClose }: Props) {
       setError("Описание слишком длинное (максимум 500 символов)");
       return;
     }
+    setIsSubmitting(true);
     const result = await createOrder(
       service.id,
       service.name,
@@ -70,9 +73,11 @@ export default function OrderModal({ service, onClose }: Props) {
       Math.min(Math.max(Math.trunc(bonusUsed), 0), maxBonus)
     );
     if (!result.ok) {
+      setIsSubmitting(false);
       setError(result.message || "Не удалось оформить заказ");
       return;
     }
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -244,11 +249,12 @@ export default function OrderModal({ service, onClose }: Props) {
 
               <button
                 type="submit"
-                className="btn-primary w-full justify-center py-3.5"
+                disabled={isSubmitting}
+                className="btn-primary w-full justify-center py-3.5 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {currentUser ? (
                   <>
-                    Оформить заказ
+                    {isSubmitting ? "Оформляем..." : "Оформить заказ"}
                     <ArrowRight className="w-4 h-4" />
                   </>
                 ) : (

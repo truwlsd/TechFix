@@ -159,7 +159,8 @@ export const useStore = create<Store>()(
         }
         try {
           await createOrderRequest(token, { serviceId, deviceDescription, bonusUsed });
-          await get().bootstrapSession();
+          // Refresh user/orders in background so UI confirmation can appear instantly.
+          void get().bootstrapSession();
           return { ok: true };
         } catch (e) {
           return { ok: false, message: (e as Error).message };

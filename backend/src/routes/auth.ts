@@ -8,12 +8,18 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-const registerSchema = z.object({
-  name: z.string().min(2),
-  email: z.email(),
-  phone: z.string().min(6),
-  password: z.string().min(6),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2),
+    email: z.email(),
+    phone: z.string().min(6),
+    password: z.string().min(6),
+    consentPersonalData: z.boolean(),
+  })
+  .refine((data) => data.consentPersonalData === true, {
+    message: "Требуется согласие на обработку персональных данных",
+    path: ["consentPersonalData"],
+  });
 
 const loginSchema = z.object({
   email: z.email(),

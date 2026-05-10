@@ -15,11 +15,12 @@ export async function registerRequest(
   name: string,
   email: string,
   phone: string,
-  password: string
+  password: string,
+  consentPersonalData: boolean
 ): Promise<{ token: string; user: User }> {
   return apiFetch("/auth/register", {
     method: "POST",
-    body: JSON.stringify({ name, email, phone, password }),
+    body: JSON.stringify({ name, email, phone, password, consentPersonalData }),
   }) as Promise<{ token: string; user: User }>;
 }
 

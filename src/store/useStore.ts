@@ -9,8 +9,13 @@ import {
   fetchOrdersForUser,
   createOrderRequest,
   patchOrderStatus,
+  fetchMyChatMessages,
+  sendMyChatMessage,
+  fetchAdminChatThreads,
+  fetchAdminChatMessages,
+  sendAdminChatMessage,
 } from "../api";
-import type { Order, OrderStatus, Service, User } from "../types/domain";
+import type { ChatMessage, ChatThread, Order, OrderStatus, Service, User } from "../types/domain";
 
 export type { Order, OrderStatus, Service, User } from "../types/domain";
 
@@ -18,6 +23,9 @@ interface Store {
   currentUser: User | null;
   token: string | null;
   orders: Order[];
+  chatMessages: ChatMessage[];
+  chatThreads: ChatThread[];
+  activeChatUserId: string | null;
   services: Service[];
   /** false until first refreshServices() finishes (success, fallback, or error). */
   servicesHydrated: boolean;
@@ -28,7 +36,8 @@ interface Store {
     name: string,
     email: string,
     phone: string,
-    password: string
+    password: string,
+    consentPersonalData: boolean
   ) => Promise<{ ok: boolean; message?: string }>;
   bootstrapSession: () => Promise<void>;
   logout: () => void;
@@ -47,6 +56,11 @@ interface Store {
     comment?: string
   ) => Promise<{ ok: boolean; message?: string }>;
   refreshOrders: () => Promise<void>;
+  refreshMyChat: () => Promise<void>;
+  sendMessageToMyChat: (text: string) => Promise<{ ok: boolean; message?: string }>;
+  refreshAdminThreads: () => Promise<void>;
+  openAdminChat: (userId: string) => Promise<void>;
+  sendAdminMessage: (text: string) => Promise<{ ok: boolean; message?: string }>;
   refreshServices: () => Promise<void>;
 
   isAuthModalOpen: boolean;
@@ -66,6 +80,9 @@ export const useStore = create<Store>()(
       currentUser: null,
       token: null,
       orders: [],
+      chatMessages: [],
+      chatThreads: [],
+      activeChatUserId: null,
       services: [],
       servicesHydrated: false,
       isBootstrapping: false,
@@ -85,8 +102,12 @@ export const useStore = create<Store>()(
           set({ currentUser: me });
           await get().refreshServices();
           await get().refreshOrders();
+          await get().refreshMyChat();
+          if (me.isAdmin) {
+            await get().refreshAdminThreads();
+          }
         } catch {
-          set({ token: null, currentUser: null, orders: [] });
+          set({ token: null, currentUser: null, orders: [], chatMessages: [], chatThreads: [] });
         } finally {
           set({ isBootstrapping: false });
         }
@@ -97,24 +118,37 @@ export const useStore = create<Store>()(
           const result = await loginRequest(email, password);
           set({ token: result.token, currentUser: result.user });
           await get().refreshOrders();
+          await get().refreshMyChat();
+          if (result.user.isAdmin) {
+            await get().refreshAdminThreads();
+          }
           return { ok: true };
         } catch (e) {
           return { ok: false, message: (e as Error).message };
         }
       },
 
-      register: async (name, email, phone, password) => {
+      register: async (name, email, phone, password, consentPersonalData) => {
         try {
-          const result = await registerRequest(name, email, phone, password);
+          const result = await registerRequest(name, email, phone, password, consentPersonalData);
           set({ token: result.token, currentUser: result.user });
           await get().refreshOrders();
+          await get().refreshMyChat();
           return { ok: true };
         } catch (e) {
           return { ok: false, message: (e as Error).message };
         }
       },
 
-      logout: () => set({ currentUser: null, token: null, orders: [] }),
+      logout: () =>
+        set({
+          currentUser: null,
+          token: null,
+          orders: [],
+          chatMessages: [],
+          chatThreads: [],
+          activeChatUserId: null,
+        }),
 
       updateUser: async (data) => {
         const token = get().token;
@@ -150,6 +184,71 @@ export const useStore = create<Store>()(
         }
         const orders = await fetchOrdersForUser(token, currentUser.isAdmin);
         set({ orders });
+      },
+
+      refreshMyChat: async () => {
+        const token = get().token;
+        const currentUser = get().currentUser;
+        if (!token || !currentUser) {
+          set({ chatMessages: [] });
+          return;
+        }
+        const messages = await fetchMyChatMessages(token);
+        set({ chatMessages: messages });
+      },
+
+      sendMessageToMyChat: async (text) => {
+        const token = get().token;
+        if (!token) {
+          return { ok: false, message: "Не авторизован" };
+        }
+        try {
+          await sendMyChatMessage(token, text.trim());
+          await get().refreshMyChat();
+          if (get().currentUser?.isAdmin && get().activeChatUserId) {
+            await get().openAdminChat(get().activeChatUserId);
+            await get().refreshAdminThreads();
+          }
+          return { ok: true };
+        } catch (e) {
+          return { ok: false, message: (e as Error).message };
+        }
+      },
+
+      refreshAdminThreads: async () => {
+        const token = get().token;
+        const currentUser = get().currentUser;
+        if (!token || !currentUser?.isAdmin) {
+          set({ chatThreads: [] });
+          return;
+        }
+        const threads = await fetchAdminChatThreads(token);
+        set({ chatThreads: threads });
+      },
+
+      openAdminChat: async (userId) => {
+        const token = get().token;
+        const currentUser = get().currentUser;
+        if (!token || !currentUser?.isAdmin) return;
+        const messages = await fetchAdminChatMessages(token, userId);
+        set({ activeChatUserId: userId, chatMessages: messages });
+      },
+
+      sendAdminMessage: async (text) => {
+        const token = get().token;
+        const currentUser = get().currentUser;
+        const activeChatUserId = get().activeChatUserId;
+        if (!token || !currentUser?.isAdmin || !activeChatUserId) {
+          return { ok: false, message: "Чат не выбран" };
+        }
+        try {
+          await sendAdminChatMessage(token, activeChatUserId, text.trim());
+          await get().openAdminChat(activeChatUserId);
+          await get().refreshAdminThreads();
+          return { ok: true };
+        } catch (e) {
+          return { ok: false, message: (e as Error).message };
+        }
       },
 
       createOrder: async (serviceId, _serviceName, _servicePrice, deviceDescription, bonusUsed) => {

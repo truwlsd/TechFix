@@ -107,7 +107,7 @@ export function AdminPanel() {
           <option value="">Выберите заказ</option>
           {filteredOrders.map((o) => (
             <option key={o.id} value={o.id}>
-              {o.id} — {o.serviceName} ({STATUS_MAP[o.status].label})
+              {o.id} — {o.customerName ?? "Клиент"} — {o.serviceName} ({STATUS_MAP[o.status].label})
             </option>
           ))}
         </select>
@@ -122,6 +122,12 @@ export function AdminPanel() {
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3">
             <p className="text-xs text-white/30 mb-1">Выбранный заказ</p>
             <p className="text-sm font-medium text-white">{selectedOrder.serviceName}</p>
+            {selectedOrder.customerName && (
+              <p className="text-xs text-white/50 mt-0.5">
+                {selectedOrder.customerName}
+                {selectedOrder.customerPhone ? ` · ${selectedOrder.customerPhone}` : ""}
+              </p>
+            )}
             <p className="text-xs text-white/40 mt-0.5">{selectedOrder.deviceDescription}</p>
             <p className="text-xs text-white/30 mt-1">
               Текущий статус: {STATUS_MAP[selectedOrder.status].label}

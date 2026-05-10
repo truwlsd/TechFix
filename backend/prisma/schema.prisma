@@ -33,6 +33,11 @@ enum BonusTransactionType {
   adjust
 }
 
+enum ChatSenderRole {
+  user
+  admin
+}
+
 model User {
   id            String             @id @default(cuid())
   name          String
@@ -48,6 +53,7 @@ model User {
   updatedAt     DateTime           @updatedAt
   orders        Order[]
   bonusLedger   BonusTransaction[]
+  chatMessages  ChatMessage[]
 }
 
 model Service {
@@ -98,4 +104,19 @@ model BonusTransaction {
   description String
   createdAt   DateTime             @default(now())
   user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id          String         @id @default(cuid())
+  userId      String
+  clientId    String?
+  senderRole  ChatSenderRole
+  text        String
+  readByUser  Boolean        @default(false)
+  readByAdmin Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, createdAt])
 }

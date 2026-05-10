@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, Eye, EyeOff, Monitor, Gift, Zap } from "lucide-react";
 import { useStore } from "../../store/useStore";
 import styles from "./AuthModal.module.css";
@@ -37,9 +37,16 @@ export default function AuthModal() {
     password: "",
   });
   const [showPass, setShowPass] = useState(false);
+  const [personalDataConsent, setPersonalDataConsent] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const shouldCloseOnClick = useRef(false);
+
+  useEffect(() => {
+    if (isAuthModalOpen && authModalMode === "register") {
+      setPersonalDataConsent(false);
+    }
+  }, [isAuthModalOpen, authModalMode]);
 
   if (!isAuthModalOpen) return null;
 
@@ -82,6 +89,9 @@ export default function AuthModal() {
       if (phoneDigits.length < 11 || !phoneDigits.startsWith("7")) {
         return "Введите телефон в формате +7XXXXXXXXXX";
       }
+      if (!personalDataConsent) {
+        return "Подтвердите согласие на обработку персональных данных";
+      }
     }
 
     return null;
@@ -108,7 +118,13 @@ export default function AuthModal() {
       if (!result.ok) setError(result.message || "Неверный email или пароль");
       else closeAuthModal();
     } else {
-      const result = await register(payload.name, payload.email, payload.phone, payload.password);
+      const result = await register(
+        payload.name,
+        payload.email,
+        payload.phone,
+        payload.password,
+        personalDataConsent
+      );
       if (!result.ok) setError(result.message || "Ошибка регистрации");
       else closeAuthModal();
     }
@@ -242,13 +258,31 @@ export default function AuthModal() {
             </div>
           </div>
 
+          {!isLogin && (
+            <label className={styles.consentLabel}>
+              <input
+                type="checkbox"
+                checked={personalDataConsent}
+                onChange={(e) => {
+                  setPersonalDataConsent(e.target.checked);
+                  setError("");
+                }}
+                className={styles.consentCheckbox}
+              />
+              <span>
+                Даю согласие на обработку персональных данных в целях регистрации и оказания
+                услуг TECHFIX.
+              </span>
+            </label>
+          )}
+
           {error && (
             <div className={styles.errBanner}>{error}</div>
           )}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || (!isLogin && !personalDataConsent)}
             className="btn-primary w-full justify-center py-3 rounded-xl disabled:opacity-50"
           >
             {loading ? (

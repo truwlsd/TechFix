@@ -2,6 +2,7 @@ export { AdminAccessDenied } from "./AdminAccessDenied";
 export { AdminPanel } from "./AdminPanel";
 export { BonusTab } from "./BonusTab";
 export { CabinetGuestScreen } from "./CabinetGuestScreen";
+export { ChatTab } from "./ChatTab";
 export { OrdersTab } from "./OrdersTab";
 export { OrderCard } from "./OrderCard";
 export { ProfileTab } from "./ProfileTab";

@@ -195,6 +195,25 @@ export function OrderCard({
             )}
           </div>
 
+          {order.customerName && (
+            <div
+              className="rounded-xl p-4"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <p className="text-[10px] text-white/25 uppercase tracking-wider font-medium mb-2">
+                Клиент
+              </p>
+              <div className="space-y-1 text-sm text-white/55">
+                <p>{order.customerName}</p>
+                {order.customerEmail && <p>{order.customerEmail}</p>}
+                {order.customerPhone && <p>{order.customerPhone}</p>}
+              </div>
+            </div>
+          )}
+
           {order.masterComment && (
             <div
               className="rounded-xl p-4"

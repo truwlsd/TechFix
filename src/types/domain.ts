@@ -15,6 +15,9 @@ export interface Order {
   serviceId: string;
   serviceName: string;
   servicePrice: number;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
   status: OrderStatus;
   createdAt: string;
   updatedAt: string;
@@ -42,6 +45,27 @@ export interface Service {
   price: number;
 }
 
+export type ChatSenderRole = "user" | "admin";
+
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  senderRole: ChatSenderRole;
+  text: string;
+  readByUser: boolean;
+  readByAdmin: boolean;
+  createdAt: string;
+}
+
+export interface ChatThread {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  lastMessage: string;
+  lastMessageAt: string | null;
+  unreadForAdmin: number;
+}
+
 /** Ответ API заказа до нормализации `serviceBasePrice` → `servicePrice` */
 export interface OrderApiRow {
   id: string;
@@ -55,4 +79,10 @@ export interface OrderApiRow {
   bonusUsed: number;
   bonusEarned: number;
   masterComment: string | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
 }

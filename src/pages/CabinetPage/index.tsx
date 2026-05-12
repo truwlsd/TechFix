@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  User, Gift, Package, Settings, MessageSquare,
+  User, Gift, Package, Settings,
   AlertCircle,
 } from "lucide-react";
 import { FooterSection } from "../../features/home/sections";
@@ -11,17 +11,16 @@ import {
   AdminPanel,
   BonusTab,
   CabinetGuestScreen,
-  ChatTab,
   OrdersTab,
   ProfileTab,
   LEVEL_CONFIG,
 } from "../../components/cabinet";
 
 interface CabinetPageProps {
-  initialTab?: "orders" | "chat" | "bonus" | "profile" | "admin";
+  initialTab?: "orders" | "bonus" | "profile" | "admin";
 }
 
-type TabId = "orders" | "chat" | "bonus" | "profile" | "admin";
+type TabId = "orders" | "bonus" | "profile" | "admin";
 
 export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps) {
   const { currentUser, orders } = useStore();
@@ -45,7 +44,6 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
 
   const tabs: Array<{ id: TabId; label: string; icon: typeof Package; badge?: number }> = [
     { id: "orders", label: "Заказы", icon: Package, badge: activeOrdersCount || undefined },
-    { id: "chat", label: "Чат", icon: MessageSquare },
     { id: "bonus", label: "Бонусы", icon: Gift },
     { id: "profile", label: "Профиль", icon: User },
   ];
@@ -161,8 +159,6 @@ export default function CabinetPage({ initialTab = "orders" }: CabinetPageProps)
         {activeTab === "bonus" && (
           <BonusTab currentUser={currentUser} userOrders={userOrders} />
         )}
-
-        {activeTab === "chat" && <ChatTab />}
 
         {activeTab === "profile" && <ProfileTab currentUser={currentUser} />}
 

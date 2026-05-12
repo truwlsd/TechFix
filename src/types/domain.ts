@@ -45,27 +45,6 @@ export interface Service {
   price: number;
 }
 
-export type ChatSenderRole = "user" | "admin";
-
-export interface ChatMessage {
-  id: string;
-  userId: string;
-  senderRole: ChatSenderRole;
-  text: string;
-  readByUser: boolean;
-  readByAdmin: boolean;
-  createdAt: string;
-}
-
-export interface ChatThread {
-  userId: string;
-  userName: string;
-  userEmail: string;
-  lastMessage: string;
-  lastMessageAt: string | null;
-  unreadForAdmin: number;
-}
-
 /** Ответ API заказа до нормализации `serviceBasePrice` → `servicePrice` */
 export interface OrderApiRow {
   id: string;

@@ -167,29 +167,6 @@
   border-left: 3px solid rgba(255, 255, 255, 0.5);
 }
 
-/* ===== CHAT ===== */
-.chat-bubble-bot {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
-  border-radius: 16px 16px 16px 4px;
-  padding: 10px 14px;
-  font-size: 13px;
-  max-width: 80%;
-  align-self: flex-start;
-}
-
-.chat-bubble-user {
-  background: rgba(255, 255, 255, 0.9);
-  color: #0a0a0f;
-  border-radius: 16px 16px 4px 16px;
-  padding: 10px 14px;
-  font-size: 13px;
-  max-width: 80%;
-  align-self: flex-end;
-  font-weight: 500;
-}
-
 /* ===== HERO IMAGE FRAME ===== */
 .hero-frame {
   background: rgba(255, 255, 255, 0.04);

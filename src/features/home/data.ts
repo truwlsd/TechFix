@@ -212,8 +212,9 @@ export const CONTACTS = [
   {
     icon: MessageCircle,
     label: "Онлайн-поддержка",
-    value: "Telegram / WhatsApp",
+    value: "Telegram",
     sub: "Ответим за 5 минут",
+    href: "https://t.me/tryuuuuuuu",
   },
 ];
 

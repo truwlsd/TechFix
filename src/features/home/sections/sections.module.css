@@ -23,6 +23,16 @@
   transform: translateX(-50%);
 }
 
+.heroVisual {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .heroVisual {
+    transform: translateX(28px);
+  }
+}
+
 .marqueeSection {
   padding: 18px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -341,6 +351,19 @@
 .contactGlass {
   padding: 28px;
   text-align: center;
+}
+
+.contactLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.contactLink:hover .contactValueTxt {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .contactLabelTxt {

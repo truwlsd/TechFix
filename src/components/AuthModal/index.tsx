@@ -260,15 +260,21 @@ export default function AuthModal() {
 
           {!isLogin && (
             <label className={styles.consentLabel}>
-              <input
-                type="checkbox"
-                checked={personalDataConsent}
-                onChange={(e) => {
-                  setPersonalDataConsent(e.target.checked);
-                  setError("");
-                }}
-                className={styles.consentCheckbox}
-              />
+              <span className={styles.consentCheckWrap}>
+                <input
+                  type="checkbox"
+                  checked={personalDataConsent}
+                  onChange={(e) => {
+                    setPersonalDataConsent(e.target.checked);
+                    setError("");
+                  }}
+                  className={styles.consentCheckboxNative}
+                />
+                <span
+                  className={`${styles.consentCheckBox} ${personalDataConsent ? styles.consentCheckBoxChecked : ""}`}
+                  aria-hidden="true"
+                />
+              </span>
               <span>
                 Даю согласие на обработку персональных данных в целях регистрации и оказания
                 услуг TECHFIX.

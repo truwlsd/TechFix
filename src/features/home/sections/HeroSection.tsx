@@ -99,7 +99,7 @@ export function HeroSection({
             </div>
           </div>
 
-          <div className="hidden lg:block animate-revealRight" style={{ animationDelay: "0.2s" }}>
+          <div className={`hidden lg:block animate-revealRight ${s.heroVisual}`} style={{ animationDelay: "0.2s" }}>
             <div className="hero-frame animate-pulse-glow">
               <div style={{ background: "#080810", borderRadius: 20, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
@@ -157,7 +157,7 @@ export function HeroSection({
                 <span style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Заказ #042 готов!</span>
               </div>
             </div>
-            <div className="absolute -bottom-4 -left-4 glass-card animate-float px-4 py-3" style={{ borderRadius: 14, animationDelay: "2s" }}>
+            <div className="absolute -bottom-4 left-2 glass-card animate-float px-4 py-3" style={{ borderRadius: 14, animationDelay: "2s" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Users className="w-4 h-4" style={{ color: "rgba(255,255,255,0.4)" }} />
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>+12 заказов сегодня</span>
